@@ -28,3 +28,9 @@ export default function Index() {
     </View>
   );
 }
+
+//API Read Access Token
+//eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNzRhOGUxODg1ZWZkOTliNTc2MDU3NjU5MjU5YjEwMiIsIm5iZiI6MTc0NjgxMTQ2NS4xOTM5OTk4LCJzdWIiOiI2ODFlM2E0OTMwZmY2N2I2ODU2YzZiNDkiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.dXl0dqsmJ8xzYLF8XVvoDcw00D1sSIn9HbbkvHzSNBI
+
+//API Key
+//e74a8e1885efd99b576057659259b102
