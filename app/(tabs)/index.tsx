@@ -16,8 +16,6 @@ import {
 
 export default function Index() {
   const router = useRouter();
-  // @ts-ignore
-  // @ts-ignore
 
   const {
     data: movies,
@@ -48,6 +46,8 @@ export default function Index() {
             <SearchBar
               onPress={() => router.push("/search")}
               placeholder="Search for a movie"
+              value=""
+              onChangeText={() => {}}
             />
 
             <>
