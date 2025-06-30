@@ -3,6 +3,7 @@ import SearchBar from "@/component/SearchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { fetchMovies } from "@/Services/api";
+import { getTrendingMovies } from "@/Services/appwrite";
 import useFetch from "@/Services/useFetch";
 import { useRouter } from "expo-router";
 import {
@@ -14,8 +15,20 @@ import {
   View,
 } from "react-native";
 
+if (__DEV__) {
+  console.log("Development mode enabled");
+} else {
+  console.log("Production mode");
+}
+
 export default function Index() {
   const router = useRouter();
+
+  const {
+    data: trendingMovies,
+    loading: trendingLoading,
+    error: trendingError,
+  } = useFetch(getTrendingMovies);
 
   const {
     data: movies,
@@ -33,22 +46,30 @@ export default function Index() {
       >
         <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
 
-        {moviesLoading ? (
+        {moviesLoading || trendingLoading ? (
           <ActivityIndicator
             size="large"
             color="#0000ff"
             className="mt-10 self-center"
           />
-        ) : moviesError ? (
-          <Text>Error: {moviesError?.message}</Text>
+        ) : moviesError || trendingError ? (
+          <Text>Error: {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className="flex-1 mt-5">
             <SearchBar
               onPress={() => router.push("/search")}
               placeholder="Search for a movie"
-              value=""
-              onChangeText={() => {}}
+              // value=""
+              // onChangeText={() => {}}
             />
+
+            {trendingMovies && (
+              <View className="mt-10">
+                <Text className=" text-lg text-white font-bold mt-5 mb-3">
+                  Trending Movies
+                </Text>
+              </View>
+            )}
 
             <>
               <Text className="text-lg text-white font-bold mt-5 mb-3">
