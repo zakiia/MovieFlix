@@ -34,7 +34,7 @@ export const updatSearchCount = async (query: string, movie: Movie) => {
         count: 1,
         title: movie.title,
 
-        poster_url_2: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+        poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
       });
     }
   } catch (error) {
