@@ -1,5 +1,4 @@
 import { icons } from "@/constants/icons";
-import { Link } from "expo-router";
 import React from "react";
 import { Image, Text, View } from "react-native";
 
@@ -9,9 +8,6 @@ const profile = () => {
       <View className="flex justify-center items-center flex-1 flex-col gap-5">
         <Image source={icons.person} className="size-10" tintColor="#Fff" />
         <Text className="text-gray-500 text-base">Profile</Text>
-        <Link href="/(auth)/login" className="text-gray-500 text-base">
-          Login
-        </Link>
       </View>
     </View>
   );

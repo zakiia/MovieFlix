@@ -1,10 +1,13 @@
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
-import { useNavigation } from "expo-router";
+import { useSSO } from "@clerk/clerk-expo";
+import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 const Login = () => {
+  const { startSSOFlow } = useSSO();
+  const router = useRouter();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -12,6 +15,21 @@ const Login = () => {
       headerShown: false,
     });
   }, [navigation]);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({
+        strategy: "oauth_google",
+      });
+
+      if (setActive && createdSessionId) {
+        setActive({ session: createdSessionId });
+        router.replace("/");
+      }
+    } catch (error) {
+      console.log("OAuth error", error);
+    }
+  };
 
   return (
     <View className="flex-1 bg-primary relative">
@@ -47,7 +65,7 @@ const Login = () => {
             shadowRadius: 12,
             elevation: 5,
           }}
-          onPress={() => console.log("Continue with Google")}
+          onPress={handleGoogleSignIn}
           activeOpacity={0.9}
         >
           <View className="w-6 h-6 justify-center items-center mr-3">
