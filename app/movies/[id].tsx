@@ -1,8 +1,10 @@
 import { icons } from "@/constants/icons";
+import { api } from "@/convex/_generated/api";
 import { fetchMovieDetails } from "@/Services/api";
 import useFetch from "@/Services/useFetch";
+import { useMutation } from "convex/react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface MovieInfoProps {
@@ -27,11 +29,28 @@ const MovieDetails = () => {
     fetchMovieDetails(id as string)
   );
 
+  const toggleBookmark = useMutation(api.bookmarks.toggleBookmark);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
+
+  const handleBookmark = async () => {
+    if (!movie) return;
+
+    const newIsBookmarked = await toggleBookmark({
+      tmdbId: movie.id,
+      title: movie.title,
+      posterPath: movie.poster_path ?? "",
+      releaseDate: movie.release_date ?? "",
+      overview: movie.overview ?? "",
+    });
+
+    setIsBookmarked(newIsBookmarked);
+  };
 
   return (
     <View className="bg-primary flex-1">
@@ -69,7 +88,12 @@ const MovieDetails = () => {
             </View>
 
             {/* Right side: save icon */}
-            <Image source={icons.save} className="size-6" tintColor="#fff" />
+            <TouchableOpacity onPress={handleBookmark}>
+              <Image
+                source={isBookmarked ? icons.saveFilled : icons.save}
+                className="size-8"
+              />
+            </TouchableOpacity>
           </View>
 
           <View className="flex-row items-center bg-dark-100 px-2 py-1 rounded-md gap-x-1 mt-2">
