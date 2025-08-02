@@ -41,15 +41,18 @@ const MovieDetails = () => {
   const handleBookmark = async () => {
     if (!movie) return;
 
-    const newIsBookmarked = await toggleBookmark({
-      tmdbId: movie.id,
-      title: movie.title,
-      posterPath: movie.poster_path ?? "",
-      releaseDate: movie.release_date ?? "",
-      overview: movie.overview ?? "",
-    });
-
-    setIsBookmarked(newIsBookmarked);
+    try {
+      const newIsBookmarked = await toggleBookmark({
+        tmdbId: movie.id,
+        title: movie.title,
+        posterPath: movie.poster_path ?? "",
+        releaseDate: movie.release_date ?? "",
+        overview: movie.overview ?? "",
+      });
+      setIsBookmarked(newIsBookmarked);
+    } catch (error) {
+      console.error("Failed to toggle bookmark:", error);
+    }
   };
 
   return (
@@ -105,25 +108,49 @@ const MovieDetails = () => {
               ({movie?.vote_count} votes)
             </Text>
           </View>
-          <MovieInfo label="Overview" value={movie?.overview} />
-          <MovieInfo
+          {movie?.overview && (
+            <MovieInfo label="Overview" value={movie?.overview} />
+          )}
+          {/* <MovieInfo
             label="Genres"
             value={movie?.genres?.map((g) => g.name).join("-") || "NA"}
-          />
-          <View className="flex flex-row justify-between w-1/2">
-            <MovieInfo
-              label="Budget"
-              value={`$${movie?.budget / 1_000_000} million`}
-            />
-            <MovieInfo
-              label="Revenue"
-              value={`${Math.round(movie?.revenue) / 1_000_000}`}
-            />
-          </View>
+          /> */}
           <MovieInfo
             label="Production Companies"
             value={
+              Array.isArray(movie?.production_companies)
+                ? movie.production_companies.map((c) => c.name).join(" - ")
+                : "N/A"
+            }
+          />
+
+          <View className="flex flex-row justify-between w-1/2">
+            {movie?.budget && (
+              <MovieInfo
+                label="Budget"
+                value={`$${movie?.budget / 1_000_000} million`}
+              />
+            )}
+            {movie?.revenue && (
+              <MovieInfo
+                label="Revenue"
+                value={`${Math.round(movie?.revenue) / 1_000_000}`}
+              />
+            )}
+          </View>
+          {/* <MovieInfo
+            label="Production Companies"
+            value={
               movie?.production_companies.map((c) => c.name).join("-") || "N/A"
+            }
+          /> */}
+
+          <MovieInfo
+            label="Production Companies"
+            value={
+              Array.isArray(movie?.production_companies)
+                ? movie.production_companies.map((c) => c.name).join(" - ")
+                : "N/A"
             }
           />
         </View>
